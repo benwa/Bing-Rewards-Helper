@@ -26,6 +26,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 							// Get a list of search terms
 							var xhr = new XMLHttpRequest();
 							xhr.open("GET", "http://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=10&rnnamespace=0", false);
+							xhr.setRequestHeader("Api-User-Agent", chrome.app.getDetails().name + "/" + chrome.app.getDetails().version);
 							xhr.onload = function() {
 								var queries = JSON.parse(xhr.responseText).query.random;
 								for (var k in queries)

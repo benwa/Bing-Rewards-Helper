@@ -1,6 +1,6 @@
 {
   "name": "Bing Rewards Helper",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "description": "Rack up Bing Rewards points.",
   "icons": {
     "16": "16.png",
@@ -21,7 +21,7 @@
   "permissions": [
     "webNavigation",
     "tabs",
-    "http://*.bing.com/*",
+    "*://*.bing.com/*",
     "http://en.wikipedia.org/*"
   ],
   "web_accessible_resources": [
