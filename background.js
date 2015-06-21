@@ -12,7 +12,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 
 	// Get current reward offers
 	var offersXHR = new XMLHttpRequest();
-	offersXHR.open("GET", "http://www.bing.com/rewardsapp/getoffers", false);
+	offersXHR.open("GET", "https://www.bing.com/rewardsapp/getoffers", false);
 	offersXHR.onload = function() {
 		var json = JSON.parse(offersXHR.responseText);
 		if (json.ErrorDetail.ErrorCode == 0) {
@@ -25,7 +25,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 						for (var j = 1; j <= Math.ceil(totalSearches / 10); j++) {
 							// Get a list of search terms
 							var xhr = new XMLHttpRequest();
-							xhr.open("GET", "http://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=10&rnnamespace=0", false);
+							xhr.open("GET", "https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=10&rnnamespace=0", false);
 							xhr.setRequestHeader("Api-User-Agent", chrome.app.getDetails().name + "/" + chrome.app.getDetails().version);
 							xhr.onload = function() {
 								var queries = JSON.parse(xhr.responseText).query.random;
@@ -38,7 +38,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 						while (terms.length > 0) {
 							// Search away
 							var xhr = new XMLHttpRequest();
-							xhr.open("GET", "http://www.bing.com/search?q=" + terms.shift(), false);
+							xhr.open("GET", "https://www.bing.com/search?q=" + terms.shift(), false);
 							try{xhr.send(null);} catch(e){}
 						}
 
@@ -46,7 +46,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 					case "urlreward":
 						// Active the other offer links
 						var xhr = new XMLHttpRequest();
-						xhr.open("HEAD", "http://www.bing.com" + json.Communications[i].Message.destinationurl, false);
+						xhr.open("HEAD", "https://www.bing.com" + json.Communications[i].Message.destinationurl, false);
 						try{xhr.send(null);} catch(e){}
 					break;
 					default:
