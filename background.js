@@ -1,14 +1,26 @@
 // Only load for bing.com domain
-chrome.webNavigation.onCompleted.addListener(function(details) {
-	chrome.pageAction.show(details.tabId);
-}, {url: [{hostSuffix: "bing.com"}]});
+chrome.runtime.onInstalled.addListener(function(details) {
+	chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+		chrome.declarativeContent.onPageChanged.addRules([{
+			conditions: [
+				new chrome.declarativeContent.PageStateMatcher({
+					pageUrl: {
+						hostEquals: "www.bing.com",
+						schemes: [ "http", "https" ]
+					}
+				})
+			],
+			actions: [ new chrome.declarativeContent.ShowPageAction() ]
+		}]);
+	});
+});
 
 chrome.pageAction.onClicked.addListener(function(tab) {
 	// Insert spinner stylesheet
-	chrome.tabs.insertCSS(tab.id, {"file": "spinner.css"});
+	chrome.tabs.insertCSS({"file": "spinner.css"});
 
 	// Insert spinner javascript
-	chrome.tabs.executeScript(tab.id, {"file": "spinner.js"});
+	chrome.tabs.executeScript({"file": "spinner.js"});
 
 	// Get current reward offers
 	var offersXHR = new XMLHttpRequest();
