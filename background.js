@@ -24,6 +24,13 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 	// Insert spinner javascript
 	chrome.tabs.executeScript({"file": "spinner.js"});
 
+	var tasks = {task: 0};
+	Object.observe(tasks, function(changes) {
+		changes.forEach(function(change) {
+			if (change.oldValue == 1 && change.object.task == 0)
+				chrome.tabs.update(tab.id, {"url": tab.url});
+		});
+	});
 	fetch("https://www.bing.com/rewardsapp/getoffers", {credentials: "include"})
 	.then(function(response) {
 		return response.json()
@@ -35,42 +42,49 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 							var searchParams = json.Communications[i].Message.description.match(/\d+/g);
 							var totalSearches = searchParams[1] * searchParams[2];
 							var terms = [];
-							for (var j = 1; j <= Math.ceil(totalSearches / 10); j++) {
-								// Get a list of search terms
-								fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=10&rnnamespace=0", {
-									headers: {
-										"Api-User-Agent": chrome.app.getDetails().name + "/" + chrome.app.getDetails().version
+							// Get a list of search terms
+							fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=" + totalSearches, {
+								headers: {
+									"Api-User-Agent": chrome.app.getDetails().name + "/" + chrome.app.getDetails().version
+								}
+							})
+							.then(function(wikiResponse) {
+								return wikiResponse.json()
+								.then(function(wikiJson) {
+									var queries = wikiJson.query.random;
+									for (var k in queries) {
+										terms.push(queries[k].title);
+										tasks.task++;
+									}
+
+									while (terms.length > 0) {
+										// Search away
+										fetch("https://www.bing.com/search?q=" + terms.shift(), {credentials: "include", method: "GET"})
+										.then(function() {
+											tasks.task--;
+										})
+										.catch(function(error) {
+											console.error(error);
+											tasks.task--;
+										});
 									}
 								})
-								.then(function(wikiResponse) {
-									return wikiResponse.json()
-									.then(function(wikiJson) {
-										var queries = wikiJson.query.random;
-										for (var k in queries)
-											terms.push(queries[k].title);
-
-										while (terms.length > 0) {
-											// Search away
-											fetch("https://www.bing.com/search?q=" + terms.shift(), {credentials: "include"})
-											.catch(function(error) {
-												console.error(error);
-											});
-										}
-									})
-								})
-								.catch(function(error) {
-									console.error(error);
-								});
-							}
+							})
+							.catch(function(error) {
+								console.error(error);
+							});
 						break;
 						case "urlreward":
 							// Activate the other offer links
-							try {
-								fetch("https://www.bing.com" + json.Communications[i].Message.destinationurl, {method: "HEAD"})
-								.catch(function(error) {
-									console.error(error);
-								});
-							} catch(e){}
+							tasks.task++;
+							fetch("https://www.bing.com" + json.Communications[i].Message.destinationurl, {method: "HEAD"})
+							.then(function() {
+								tasks.task--;
+							})
+							.catch(function(error) {
+								console.error(error);
+								tasks.task--;
+							});
 						break;
 						default:
 							if (json.Communications[i].CommunicationId == "captcha_1")
@@ -81,6 +95,4 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 			}
 		})
 	})
-	// Refresh the page to see the new status
-	chrome.tabs.update(tab.id, {"url": tab.url});
 });
