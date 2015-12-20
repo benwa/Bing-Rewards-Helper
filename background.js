@@ -18,15 +18,22 @@ chrome.runtime.onInstalled.addListener(function(details) {
 });
 
 chrome.pageAction.onClicked.addListener(function(tab) {
-	// Insert spinner stylesheet
-	chrome.tabs.insertCSS({"file": "spinner.css"});
+	// Insert progress stylesheet
+	chrome.tabs.insertCSS({file: "progress.css"});
 
-	// Insert spinner javascript
-	chrome.tabs.executeScript({"file": "spinner.js"});
+	// Insert progress javascript
+	chrome.tabs.executeScript({file: "progressbar.min.js"});
+	chrome.tabs.executeScript({file: "progress.js"});
 
 	var tasks = {task: 0};
+	var max = 0;
+	var current = 0;
 	Object.observe(tasks, function(changes) {
 		changes.forEach(function(change) {
+			max = max < tasks.task ? tasks.task : max;
+			if (current < tasks.task)
+				current++;
+			chrome.tabs.sendMessage(tab.id, {current: current, max: max});
 			if (change.oldValue == 1 && change.object.task == 0)
 				chrome.tabs.update(tab.id, {"url": tab.url});
 		});

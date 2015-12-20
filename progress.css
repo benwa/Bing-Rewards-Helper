@@ -6,7 +6,7 @@ html {
 /* Create the overlay */
 div.overlay {
 	background: -webkit-gradient(linear, left top, left bottom, from(rgba(38, 47, 50, 0.9)), to(rgba(114, 142, 170, 0.9)));
-	text-align: center;
+	display: inline-flex;
 	padding: 0;
 	margin: 0;
 	width: 100%;
@@ -17,12 +17,9 @@ div.overlay {
 	z-index: 9999;
 }
 
-/* Create the spinner */
-div .spinner {
-	position: absolute;
-	display: inline-block;
-	top: 50%;
-	left: 50%;
-	margin-top: -100px;
-	margin-left: -100px;
+div.progressContainer {
+	margin: auto;
+	font-size: xx-large;
+	height: 300px;
+	width: 300px;
 }
