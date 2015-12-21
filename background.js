@@ -5,12 +5,12 @@ chrome.runtime.onInstalled.addListener(function(details) {
 	chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
 		chrome.declarativeContent.onPageChanged.addRules([{
 			conditions: [
-			new chrome.declarativeContent.PageStateMatcher({
-				pageUrl: {
-					hostEquals: "www.bing.com",
-					schemes: [ "http", "https" ]
-				}
-			})
+				new chrome.declarativeContent.PageStateMatcher({
+					pageUrl: {
+						hostEquals: "www.bing.com",
+						schemes: [ "http", "https" ]
+					}
+				})
 			],
 			actions: [ new chrome.declarativeContent.ShowPageAction() ]
 		}]);
@@ -22,8 +22,9 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 	chrome.tabs.insertCSS({file: "progress.css"});
 
 	// Insert progress javascript
-	chrome.tabs.executeScript({file: "progressbar.min.js"});
-	chrome.tabs.executeScript({file: "progress.js"});
+	["progressbar.min.js", "progress.js"].map(function(file) {
+		chrome.tabs.executeScript({file: file})
+	});
 
 	var tasks = {task: 0};
 	var max = 0;
