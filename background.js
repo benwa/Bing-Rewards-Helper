@@ -47,7 +47,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 					switch (json.Communications[i].ActivityType) {
 						case "search":
 							var searchParams = json.Communications[i].Message.description.match(/\d+/g);
-							var totalSearches = searchParams[1] * searchParams[2];
+							var totalSearches = searchParams[1] * (json.Communications[i].TicketCap - json.Communications[i].TicketProgress);
 							var terms = [];
 							// Get a list of search terms
 							fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=" + totalSearches, {
