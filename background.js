@@ -65,8 +65,15 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 									}
 
 									while (terms.length > 0) {
+										var headers = new Headers();
+										if (json.Communications[i].title == "Mobile search")
+											headers.set("User-Agent", "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.83 Mobile Safari/537.36");
 										// Search away
-										fetch("https://www.bing.com/search?q=" + terms.shift(), {credentials: "include", method: "GET"})
+										fetch("https://www.bing.com/search?q=" + terms.shift(), {
+											credentials: "include",
+											method: "GET",
+											headers: headers
+										})
 										.then(function() {
 											tasks.task--;
 										})
