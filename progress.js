@@ -7,6 +7,7 @@ containerDiv.className = "progressContainer";
 mainDiv.appendChild(containerDiv);
 document.body.appendChild(mainDiv);
 
+// Create the progress element
 var progress = new ProgressBar.Circle(containerDiv, {
 	color: "#ffffff",
 	strokeWidth: 2,

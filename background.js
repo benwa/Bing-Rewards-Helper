@@ -65,6 +65,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 									}
 
 									while (terms.length > 0) {
+										// Check if mobile
 										var headers = new Headers();
 										if (json.Communications[i].title == "Mobile search")
 											headers.set("User-Agent", "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.83 Mobile Safari/537.36");
@@ -101,6 +102,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 							});
 						break;
 						default:
+							// Captcha check
 							if (json.Communications[i].CommunicationId == "captcha_1")
 								chrome.tabs.update(tab.id, {url: "https://www.bing.com" + json.Communications[i].Message.destinationurl})
 						break;

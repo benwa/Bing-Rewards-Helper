@@ -17,6 +17,7 @@ div.overlay {
 	z-index: 9999;
 }
 
+/* Style the progress bar */
 div.progressContainer {
 	margin: auto;
 	font-size: xx-large;
