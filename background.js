@@ -90,16 +90,18 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 							});
 						break;
 						case "urlreward":
-							// Activate the other offer links
-							tasks.task++;
-							fetch("https://www.bing.com" + json.Communications[i].Message.destinationurl, {method: "HEAD"})
-							.then(function() {
-								tasks.task--;
-							})
-							.catch(function(error) {
-								console.error(error);
-								tasks.task--;
-							});
+							if (json.Communications[i].State == "Active") {
+								// Activate the other offer links
+								tasks.task++;
+								fetch("https://www.bing.com" + json.Communications[i].Message.destinationurl, {method: "HEAD"})
+								.then(function() {
+									tasks.task--;
+								})
+								.catch(function(error) {
+									console.error(error);
+									tasks.task--;
+								});
+							}
 						break;
 						default:
 							// Captcha check
