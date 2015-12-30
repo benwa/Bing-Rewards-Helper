@@ -36,7 +36,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 				current++;
 			chrome.tabs.sendMessage(tab.id, {current: current, max: max});
 			if (change.oldValue == 1 && change.object.task == 0)
-				chrome.tabs.update(tab.id, {"url": tab.url});
+				chrome.tabs.reload(tab.id);
 		});
 	});
 	fetch("https://www.bing.com/rewardsapp/getoffers", {credentials: "include"})
