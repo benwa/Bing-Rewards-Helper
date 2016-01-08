@@ -51,7 +51,7 @@ chrome.pageAction.onClicked.addListener(function(tab) {
 							var totalSearches = searchParams[1] * (json.Communications[i].TicketCap - json.Communications[i].TicketProgress);
 							var terms = [];
 							// Get a list of search terms
-							fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=" + totalSearches, {
+							fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnnamespace=0&rnlimit=" + totalSearches, {
 								headers: {
 									"Api-User-Agent": chrome.app.getDetails().name + "/" + chrome.app.getDetails().version
 								}
